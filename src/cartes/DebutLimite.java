@@ -13,4 +13,17 @@ public class DebutLimite extends Limite {
 		return "Limite "+this.limite;
 	}
 
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof DebutLimite) {
+			DebutLimite lim = (DebutLimite)obj;
+			if (lim.limite == this.limite) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
 }
