@@ -39,21 +39,28 @@ public class JeuDeCartes {
 		return str.toString();
 	}
 	
-	private boolean checkCountConfiguration(Configuration conf) {
-		List<Carte> cartes = new ArrayList<>(donnerCartes());
+	private boolean checkCountConfiguration(Configuration conf, Carte[] cartes) {
 		int nbEx = conf.getNbExemplaires();
 		Carte carte = conf.getCarte();
-		for (int i = 0; i < nbEx; i++) {
-			cartes.remove((Object) carte);
+		int countEx = 0;
+		for (Carte elt : cartes) {
+			if (elt.equals(carte)) {
+				countEx++;
+				if (countEx == nbEx) {
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 	
 	public boolean checkCount() {
 		if (donnerCartes().length != 106) {
 			return false;
 		}
+		Carte[] cartes = donnerCartes();
 		for (Configuration conf : typesDeCartes) {
-			checkCountConfiguration(conf);
+			checkCountConfiguration(conf, cartes);
 		}
 		return true;
 	}
