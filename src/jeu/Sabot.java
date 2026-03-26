@@ -30,6 +30,7 @@ public class Sabot implements Iterable<Carte>{
 	}
 	
 	public Carte piocher() {
+		assert (!estVide());
 		Iterator<Carte> it = iterator();
 		Carte carte = it.next();
 		it.remove();

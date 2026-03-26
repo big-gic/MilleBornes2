@@ -23,7 +23,7 @@ public class GestionCartes {
 	public static <T> T extraire2(List<T> liste) {
 		Random generateur = new Random();
 		int ind = generateur.nextInt(liste.size());
-		ListIterator<T> iterator = liste.listIterator()
+		ListIterator<T> iterator = liste.listIterator();
 		while (iterator.hasNext() && iterator.nextIndex() <= ind) {
 			iterator.next();
 		}
@@ -65,21 +65,25 @@ public class GestionCartes {
 		return resultat;
 	}
 	
-	public static <T> List<T> verifierRassemblement(List<T> liste) {
+	public static <T> boolean verifierRassemblement(List<T> liste) {
 		ListIterator<T> it1 = liste.listIterator();
 		while (it1.hasNext()) {
-			T previous = it1.next();
-			i
 			T current = it1.next();
-			while (previous.equals(current)) {
-				previous =  current;
-				current = it1.next();
+			it1.remove();
+			if (it1.hasNext()) {
+				T next = it1.next();
 				it1.remove();
-			}
-			for (ListIterator<T> it2 = liste.listIterator(); it2.hasNext(); it2.next()) {
-				
+				if (!current.equals(next)) {
+					for (ListIterator<T> it2 = liste.listIterator(); it2.hasNext();) {
+						T t = it2.next();
+						if (current.equals(t)) {
+							return false;
+						}
+					}
+				}
 			}
 		}
+		return true;
 	}
 	
 	
