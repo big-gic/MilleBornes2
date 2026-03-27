@@ -46,4 +46,12 @@ public class Joueur {
 		return null;
 	}
 	
+	public int donnerKmParcours() {
+		return zoneDeJeu.donnerKmParcourus();
+	}
+	
+	public boolean estDepotAutorise(Carte carte) {
+		return zoneDeJeu.estDepotAutorise(carte);
+	}
+	
 }

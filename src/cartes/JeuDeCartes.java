@@ -20,7 +20,7 @@ public class JeuDeCartes {
 				new Configuration(new Parade(Type.CREVAISON), 6),
 				new Configuration(new Parade(Type.ACCIDENT), 6),
 				new Configuration(new Attaque(Type.FEU), 5),
-				new Configuration(new DebutLimite(50), 4),
+				new Configuration(new DebutLimite(), 4),
 				new Configuration(new Attaque(Type.ESSENCE), 3),
 				new Configuration(new Attaque(Type.CREVAISON), 3),
 				new Configuration(new Attaque(Type.ACCIDENT), 3),
