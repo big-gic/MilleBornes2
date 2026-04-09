@@ -22,6 +22,10 @@ public class MainJoueur {
 		main.remove(carte);
 	}
 	
+	public List<Carte> getMain() {
+		return main;
+	}
+	
 	@Override
 	public String toString() {
 		return main.toString();

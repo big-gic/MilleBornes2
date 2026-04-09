@@ -8,6 +8,7 @@ import java.util.Set;
 import cartes.Attaque;
 import cartes.Bataille;
 import cartes.Borne;
+import cartes.Botte;
 import cartes.Carte;
 import cartes.DebutLimite;
 import cartes.FinLimite;
@@ -20,9 +21,15 @@ public class ZoneDeJeu {
 	private List<Limite> pileLimite = new ArrayList<>();
 	private List<Bataille> pileBataille = new ArrayList<>();
 	private Set<Borne> collectionBornes = new HashSet<>();
+	private Set<Botte> collectionBottes = new HashSet<>();
+	
+	
+	protected boolean estPrioritaire() {
+		return collectionBottes.contains(new Botte(Type.FEU));
+	}
 	
 	public int donnerLimitationVitesse() {
-		if (pileLimite.isEmpty() || pileLimite.get(pileLimite.size()-1) instanceof FinLimite) {
+		if (estPrioritaire() || pileLimite.isEmpty() || pileLimite.get(pileLimite.size()-1) instanceof FinLimite) {
 			return 200;
 		} else {
 			return 50;
@@ -41,15 +48,32 @@ public class ZoneDeJeu {
 		if (c instanceof Borne) {
 			collectionBornes.add((Borne) c);
 		}
-		if (c instanceof Limite) {
+		else if (c instanceof Limite) {
 			pileLimite.add((Limite) c);
 		}
-		if (c instanceof Bataille) {
+		else if (c instanceof Bataille) {
 			pileBataille.add((Bataille) c);
+		}
+		else {
+			collectionBottes.add((Botte) c);
 		}
 	}
 	
 	public boolean peutAvancer() {
+		if (estPrioritaire()) {
+			if (pileBataille.isEmpty()) {
+				return true;
+			}else {
+				Bataille sommet = pileBataille.get(pileBataille.size()-1);
+				if (sommet instanceof Parade)
+					return true;
+				else {
+					if (sommet.getType().equals(Type.FEU) || collectionBottes.contains(new Botte(sommet.getType()))){
+						return true;
+					}
+				}
+			}
+		}
 		if (!pileBataille.isEmpty() && pileBataille.get(pileBataille.size()-1).equals(new Parade(Type.FEU))) {
 			return true;
 		}
@@ -57,16 +81,22 @@ public class ZoneDeJeu {
 	}
 	
 	protected boolean estDepotFeuVertAutorise() {
+		if (estPrioritaire()) {
+			return false;
+		}
 		if (pileBataille.isEmpty()) {
 			return true;
 		}
-		Bataille sommet = pileBataille.get(pileBataille.size()-1);
-		if (sommet.equals(new Attaque(Type.FEU))) {
-			return true;
-		}
-		if (sommet instanceof Parade) {
-			if (!sommet.getType().equals(Type.FEU)) {
+		else {
+			Bataille sommet = pileBataille.get(pileBataille.size()-1);
+			if (sommet instanceof Attaque &&
+					(sommet.getType().equals(Type.FEU) || collectionBottes.contains(new Botte(sommet.getType())))) {
 				return true;
+			}
+			else {
+				if (!sommet.getType().equals(Type.FEU)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -88,6 +118,9 @@ public class ZoneDeJeu {
 	}
 	
 	protected boolean estDepotLimiteAutorise(Limite limite) {
+		if (estPrioritaire()) {
+			return false;
+		}
 		if (limite instanceof DebutLimite) {
 			return pileLimite.isEmpty() || pileLimite.get(pileLimite.size()-1) instanceof FinLimite;
 		}
@@ -97,6 +130,9 @@ public class ZoneDeJeu {
 	}
 	
 	protected boolean estDepotBatailleAutorise(Bataille bataille) {
+		if (collectionBottes.contains(new Botte(bataille.getType()))) {
+			return false;
+		}
 		if (bataille instanceof Attaque) {
 			return peutAvancer();
 		}
@@ -117,14 +153,17 @@ public class ZoneDeJeu {
 		if (carte.equals(new Parade(Type.FEU))) {
 			return estDepotFeuVertAutorise();
 		}
-		if (carte instanceof Borne) {
+		else if (carte instanceof Borne) {
 			return estDepotBorneAutorise((Borne) carte);
 		}
-		if (carte instanceof Limite) {
+		else if (carte instanceof Limite) {
 			return estDepotLimiteAutorise((Limite) carte);
 		}
-		else {
+		else if (carte instanceof Bataille) {
 			return estDepotBatailleAutorise((Bataille) carte);
+		}
+		else {
+			return true;
 		}
 	}
 	

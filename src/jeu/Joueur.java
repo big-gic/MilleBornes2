@@ -1,5 +1,7 @@
 package jeu;
 
+import java.util.Set;
+
 import cartes.Carte;
 
 public class Joueur {
@@ -33,6 +35,10 @@ public class Joueur {
 		return mainJoueur;
 	}
 	
+	public ZoneDeJeu getZoneDeJeu() {
+		return zoneDeJeu;
+	}
+	
 	public void donner(Carte carte) {
 		mainJoueur.prendre(carte);
 	}
@@ -52,6 +58,14 @@ public class Joueur {
 	
 	public boolean estDepotAutorise(Carte carte) {
 		return zoneDeJeu.estDepotAutorise(carte);
+	}
+	
+	public Joueur coupsPossibles(Set<Joueur> participants) {
+		for (Joueur participant : participants) {
+			for (Carte carte : mainJoueur.getMain()) {
+				
+			}
+		}
 	}
 	
 }
