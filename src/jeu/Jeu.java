@@ -2,12 +2,9 @@ package jeu;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
 import cartes.Carte;
 import cartes.JeuDeCartes;
 import utils.GestionCartes;
@@ -27,6 +24,15 @@ public class Jeu {
 		sabot = new Sabot(listeCartes.toArray(new Carte[0]));
 	}
 	
+	
+	public Sabot getSabot() {
+		return sabot;
+	}
+
+	public Set<Joueur> getJoueurs() {
+		return joueurs;
+	}
+
 	public void inscrire(Joueur...participants) {
 		Collections.addAll(joueurs, participants);
 	}
@@ -38,6 +44,26 @@ public class Jeu {
 			}
 		}
 	}
+	
+	public String jouerTour(Joueur joueur) {
+		StringBuilder str = new StringBuilder();
+		Carte carte = joueur.prendreCarte(sabot);
+		str.append("Le joueur a pioche "+ carte.toString() +"\n");
+		Coup coup = joueur.choisirCoup(joueurs);
+		str.append(coup.toString());
+		carte = coup.getCarte();
+		joueur.getMainJoueur().jouer(carte);
+		if (coup.getJoueurCible() == null) {
+			sabot.ajouterCarte(carte);
+		}
+		else {
+			coup.getJoueurCible().getZoneDeJeu().deposer(carte);;
+		}
+		return str.toString();
+	}
+	
+	
+	
 	
 	
 }

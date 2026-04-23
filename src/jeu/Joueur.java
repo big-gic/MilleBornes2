@@ -1,8 +1,12 @@
 package jeu;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
+import cartes.Bataille;
+import cartes.Botte;
 import cartes.Carte;
 
 public class Joueur {
@@ -88,7 +92,57 @@ public class Joueur {
 	}
 	
 	public void retirerDeLaMain(Carte carte) {
-		mainJoueur.getMain().remove(carte);
+		mainJoueur.jouer(carte);
 	}
+	
+	private Coup choisirCoupAleatoire(Set<Coup> coups) {
+		Random generateur = new Random();
+		int ind = generateur.nextInt(coups.size());
+		int i = 0;
+		for (Coup coup : coups) {
+			if (i == ind) {
+				return coup;
+			}
+			i++;
+		}
+		throw new IllegalStateException();
+	}
+	
+	public Coup choisirCoup(Set<Joueur> participants) {
+		Set<Coup> coupsPos = coupsPossibles(participants);
+		if (coupsPos.isEmpty()) {
+			return choisirCoupAleatoire(coupsDefausse());
+		}
+		else {
+			return choisirCoupAleatoire(coupsPos);
+		}
+	}
+	
+	public String afficherEtatJoueur() {
+		StringBuilder str = new StringBuilder();
+		Set<Botte> bottes = zoneDeJeu.getCollectionBottes();
+		str.append("[");
+		for (Botte botte : bottes) {
+			str.append(botte.toString()+", ");
+		}
+		str.append("]\n");
+		str.append(Boolean.toString(zoneDeJeu.donnerLimitationVitesse() == 50)+"\n");
+		List<Bataille> pileBataille = zoneDeJeu.getPileBataille();
+		if (pileBataille.isEmpty()) {
+			str.append("null\n");
+		}
+		else {
+			str.append(pileBataille.get(pileBataille.size()-1).toString()+"\n");
+		}
+		str.append(mainJoueur.toString());
+		
+		return str.toString();
+	}
+	
+	
+	
+	
+	
+	
 	
 }

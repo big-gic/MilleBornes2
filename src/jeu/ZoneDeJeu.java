@@ -24,6 +24,22 @@ public class ZoneDeJeu {
 	private Set<Botte> collectionBottes = new HashSet<>();
 	
 	
+	public List<Limite> getPileLimite() {
+		return pileLimite;
+	}
+
+	public List<Bataille> getPileBataille() {
+		return pileBataille;
+	}
+
+	public Set<Borne> getCollectionBornes() {
+		return collectionBornes;
+	}
+
+	public Set<Botte> getCollectionBottes() {
+		return collectionBottes;
+	}
+
 	protected boolean estPrioritaire() {
 		return collectionBottes.contains(new Botte(Type.FEU));
 	}

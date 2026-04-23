@@ -55,6 +55,16 @@ public class Coup {
 		return false;
 	}
 	
+	@Override
+	public String toString() {
+		if (joueurCible != null) {
+			return joueurCourant.toString() +" defausse la carte "+ carte.toString();
+		}
+		return joueurCourant.toString() +" depose la carte "+ carte.toString() +" dans la zone de jeu de "
+		+ joueurCible.toString();
+	}
+	
+	
 	
 		
 	
