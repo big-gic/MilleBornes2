@@ -1,5 +1,6 @@
 package jeu;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import cartes.Carte;
@@ -24,6 +25,11 @@ public class Joueur {
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return 31*nom.hashCode();
 	}
 	
 	@Override
@@ -60,12 +66,29 @@ public class Joueur {
 		return zoneDeJeu.estDepotAutorise(carte);
 	}
 	
-	public Joueur coupsPossibles(Set<Joueur> participants) {
+	public Set<Coup> coupsPossibles(Set<Joueur> participants) {
+		Set<Coup> coups = new HashSet<>();
 		for (Joueur participant : participants) {
 			for (Carte carte : mainJoueur.getMain()) {
-				
+				Coup coup = new Coup(this, carte, participant);
+				if (coup.estValide()) {
+					coups.add(coup);
+				}
 			}
 		}
+		return coups;
+	}
+	
+	public Set<Coup> coupsDefausse() {
+		Set<Coup> coups = new HashSet<>();
+		for (Carte carte : mainJoueur.getMain()) {
+			coups.add(new Coup(this, carte, null));
+		}
+		return coups;
+	}
+	
+	public void retirerDeLaMain(Carte carte) {
+		mainJoueur.getMain().remove(carte);
 	}
 	
 }
